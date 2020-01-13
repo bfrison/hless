@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+from argparse import ArgumentParser
+from subprocess import Popen, PIPE
+import os
+import pipes
+
+highlight = Popen(['which', 'highlight'], stdout=PIPE).communicate()[0].strip().decode('utf8')
+
+parser = ArgumentParser()
+parser.add_argument('-S', '--syntax', nargs='?')
+parser.add_argument('files', nargs='*')
+args = parser.parse_args()
+
+if args.files and args.files[0] != '-':
+    if args.syntax:
+        os.execlpe('less', 'less', '-R', *args.files, {'LESSOPEN': '| {} -O xterm256 -S {} %s'.format(highlight, args.syntax), 'TERM': 'xterm'})
+    else:
+        os.execlpe('less', 'less', '-R', *args.files, {'LESSOPEN': '| {} -O xterm256 --force %s'.format(highlight), 'TERM': 'xterm'})
+else:
+    if args.syntax:
+        t = pipes.Template()
+        t.append('highlight -O xterm256 -S {}'.format(args.syntax), '--')
+        t.append('less -R', '-.')
+        t.copy('', '')
+    else:
+        t.pipes.Template()
+        t.append('highlight -O xterm256 --force', '--')
+        t.append('less -R', '-.')
+        t.copy('', '')
