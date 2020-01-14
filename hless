@@ -43,7 +43,7 @@ else:
         t.append('less -R', '-.')
         t.copy('', '')
     else:
-        t.pipes.Template()
+        t = pipes.Template()
         t.append('highlight -O xterm256 --force', '--')
         t.append('less -R', '-.')
         t.copy('', '')
